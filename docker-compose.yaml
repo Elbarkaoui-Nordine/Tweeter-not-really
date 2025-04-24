@@ -1,0 +1,50 @@
+version: "3"
+
+services:
+  web:
+    build: .
+    container_name: web
+    environment:
+      DATABASE_URL: "mysql://symfony:secret@db:3306/symfony?serverVersion=8.0&charset=utf8mb4"
+    ports:
+      - "8000:80"
+    networks:
+      - webnet
+    volumes:
+      - .:/var/www/html:rw
+
+  db:
+    image: mysql:8.0
+    container_name: db
+    environment:
+      MYSQL_DATABASE: symfony
+      MYSQL_USER: symfony
+      MYSQL_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: root_secret
+    ports:
+      - "3307:3306"
+    networks:
+      - webnet
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: phpmyadmin
+    restart: always
+    depends_on:
+      - db
+    environment:
+      PMA_HOST: db
+      PMA_USER: symfony
+      PMA_PASSWORD: secret
+    ports:
+      - "8080:80"
+    networks:
+      - webnet
+
+volumes:
+  mysql_data:
+
+networks:
+  webnet:
