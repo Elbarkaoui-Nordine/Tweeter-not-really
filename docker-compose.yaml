@@ -1,7 +1,16 @@
 services:
-  web:
-    build: ./Backend/
-    container_name: web
+  frontend:
+    build: ./frontend
+    container_name: frontend
+    ports:
+      - "3000:80"
+    volumes:
+      - ./frontend:/app
+    depends_on:
+      - api
+  api:
+    build: ./api/
+    container_name: api
     environment:
       DATABASE_URL: "mysql://symfony:secret@db:3306/symfony?serverVersion=8.0&charset=utf8mb4"
     ports:
@@ -9,7 +18,7 @@ services:
     networks:
       - webnet
     volumes:
-      - ./Backend:/var/www/html:rw
+      - ./api:/var/www/html:rw
 
   db:
     image: mysql:8.0
