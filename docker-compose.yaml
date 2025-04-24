@@ -1,8 +1,6 @@
-version: "3"
-
 services:
   web:
-    build: .
+    build: ./Backend/
     container_name: web
     environment:
       DATABASE_URL: "mysql://symfony:secret@db:3306/symfony?serverVersion=8.0&charset=utf8mb4"
@@ -11,7 +9,7 @@ services:
     networks:
       - webnet
     volumes:
-      - .:/var/www/html:rw
+      - ./Backend:/var/www/html:rw
 
   db:
     image: mysql:8.0
